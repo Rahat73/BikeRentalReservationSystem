@@ -1,7 +1,9 @@
+import config from '../../config';
 import AppError from '../../errors/AppError';
 import { TUser } from '../user/user.interface';
-import { User } from '../user/user.model';
+import { IUserDocument, User } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
+import jwt from 'jsonwebtoken';
 
 const signUpUser = async (payload: TUser) => {
   const result = await User.create(payload);
@@ -24,7 +26,25 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(401, 'Incorrect password');
   }
 
-  return user;
+  //create token and sent to the  client
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const access_token = jwt.sign(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    { expiresIn: config.jwt_access_expires_in as string },
+  );
+
+  // Convert user document to plain object and remove unwanted fields
+  const userObject = (user as IUserDocument).toObject();
+  delete userObject.createdAt;
+  delete userObject.updatedAt;
+  delete userObject.__v;
+
+  return { user: userObject, access_token };
 };
 
 export const AuthServices = {
