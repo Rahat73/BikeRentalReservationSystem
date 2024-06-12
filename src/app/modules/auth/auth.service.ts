@@ -10,13 +10,17 @@ const signUpUser = async (payload: TUser) => {
 
 const loginUser = async (payload: TLoginUser) => {
   //check if user exists
-  const user = await User.findOne({ email: payload.email });
+  const user = await User.isUserExistsByEmail(payload.email);
   if (!user) {
     throw new AppError(404, 'No user found with this email');
   }
 
   //check if password is correct
-  if (user.password !== payload.password) {
+  const isPasswordMatched = await User.isPasswordMatched(
+    payload.password,
+    user.password,
+  );
+  if (!isPasswordMatched) {
     throw new AppError(401, 'Incorrect password');
   }
 
