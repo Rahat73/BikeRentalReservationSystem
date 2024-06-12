@@ -32,13 +32,13 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
   };
 
-  const access_token = jwt.sign(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    { expiresIn: config.jwt_access_expires_in as string },
-  );
+  const access_token =
+    'Bearer ' +
+    jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+      expiresIn: config.jwt_access_expires_in as string,
+    });
 
-  // Convert user document to plain object and remove unwanted fields
+  //remove unwanted fields from user
   const userObject = (user as IUserDocument).toObject();
   delete userObject.createdAt;
   delete userObject.updatedAt;
