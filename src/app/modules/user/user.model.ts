@@ -11,4 +11,4 @@ const userSchema = new Schema<TUser>({
   role: { type: String, enum: Object.values(UserRole), required: true },
 });
 
-const User = model<TUser>('User', userSchema);
+export const User = model<TUser>('User', userSchema);
