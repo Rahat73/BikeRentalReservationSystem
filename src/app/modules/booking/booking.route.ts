@@ -14,4 +14,6 @@ router.post(
   BookingControllers.createBooking,
 );
 
+router.put('/:id/return', auth('admin'), BookingControllers.returnBike);
+
 export const BookingRoutes = router;
