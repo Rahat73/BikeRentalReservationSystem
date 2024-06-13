@@ -6,6 +6,12 @@ import { TLoginUser } from './auth.interface';
 import jwt from 'jsonwebtoken';
 
 const signUpUser = async (payload: TUser) => {
+  //check if user exists
+  const user = await User.isUserExistsByEmail(payload.email);
+  if (user) {
+    throw new AppError(409, 'User with this email already exists');
+  }
+
   const result = await User.create(payload);
   return result;
 };
@@ -32,13 +38,13 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
   };
 
-  const access_token =
-    'Bearer ' +
-    jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-      expiresIn: config.jwt_access_expires_in as string,
-    });
+  const access_token = jwt.sign(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    { expiresIn: config.jwt_access_expires_in as string },
+  );
 
-  //remove unwanted fields from user
+  //remove unwanted fields from
   const userObject = (user as IUserDocument).toObject();
   delete userObject.createdAt;
   delete userObject.updatedAt;

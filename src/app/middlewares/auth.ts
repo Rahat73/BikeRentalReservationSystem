@@ -9,6 +9,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
   return catchAsync(async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
 
+    if (req.headers.authorization && !token) {
+      throw new AppError(401, 'Bearer before token is expected');
+    }
+
     // checking if the token is missing
     if (!token) {
       throw new AppError(401, 'You have no access to this route');

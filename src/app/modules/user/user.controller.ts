@@ -4,7 +4,8 @@ import { User } from './user.model';
 import { UserServices } from './user.service';
 
 const getProfile = catchAsync(async (req, res) => {
-  const result = await UserServices.getProfileFromDB();
+  const { email } = req.user;
+  const result = await UserServices.getProfileFromDB(email);
 
   sendResponse(res, {
     statusCode: 200,
@@ -14,6 +15,18 @@ const getProfile = catchAsync(async (req, res) => {
   });
 });
 
+const updateProfile = catchAsync(async (req, res) => {
+  const { email } = req.user;
+  const result = await UserServices.updateProfileIntoDB(email, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getProfile,
+  updateProfile,
 };
