@@ -15,6 +15,27 @@ const createBikeValidationSchema = z.object({
   }),
 });
 
+const updateBikeValidationSchema = z.object({
+  body: z.object({
+    name: z.string().optional(),
+    description: z.string().optional(),
+    pricePerHour: z
+      .number()
+      .positive('Price per hour must be a positive number')
+      .optional(),
+    isAvailable: z.boolean().optional(),
+    cc: z.number().positive('CC must be a positive number').optional(),
+    year: z
+      .number()
+      .int()
+      .positive('Year must be a positive integer')
+      .optional(),
+    model: z.string().optional(),
+    brand: z.string().optional(),
+  }),
+});
+
 export const BikeValidations = {
   createBikeValidationSchema,
+  updateBikeValidationSchema,
 };
