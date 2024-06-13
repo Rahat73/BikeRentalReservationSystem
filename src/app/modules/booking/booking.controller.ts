@@ -24,7 +24,19 @@ const returnBike = catchAsync(async (req, res) => {
   });
 });
 
+const getMyBookings = catchAsync(async (req, res) => {
+  const { email } = req.user;
+  const result = await BookingServices.getMyBookingsFromDB(email);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
 export const BookingControllers = {
   createBooking,
   returnBike,
+  getMyBookings,
 };

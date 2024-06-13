@@ -53,7 +53,7 @@ const createBookingIntoDB = async (
 const returnBike = async (bookingId: string) => {
   //check if booking exists
   const booking = await Booking.findById(bookingId);
-  if (!booking) throw new AppError(404, 'Booking not found');
+  if (!booking) throw new AppError(404, 'No data found');
 
   //fetch bike information
   const bike = await Bike.findById(booking.bikeId);
@@ -103,7 +103,18 @@ const returnBike = async (bookingId: string) => {
   }
 };
 
+const getMyBookingsFromDB = async (email: string) => {
+  const user = await User.findOne({ email });
+
+  const bookings = await Booking.find({ userId: user?._id });
+
+  if (bookings.length === 0) throw new AppError(404, 'No data found');
+
+  return bookings;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   returnBike,
+  getMyBookingsFromDB,
 };
