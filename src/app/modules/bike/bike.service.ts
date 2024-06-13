@@ -14,12 +14,21 @@ const getAllBikeFromDB = async () => {
 
 const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
   //check if bike exists
-  const bike = await Bike.findOne({ _id: id });
+  const bike = await Bike.findById(id);
   if (!bike) throw new AppError(404, 'Bike not found');
 
-  const result = await Bike.findOneAndUpdate({ _id: id }, payload, {
+  const result = await Bike.findByIdAndUpdate(id, payload, {
     new: true,
   });
+  return result;
+};
+
+const deleteBikeFromDB = async (id: string) => {
+  //check if bike exists
+  const bike = await Bike.findById(id);
+  if (!bike) throw new AppError(404, 'Bike not found');
+
+  const result = await Bike.findByIdAndDelete(id);
   return result;
 };
 
@@ -27,4 +36,5 @@ export const BikeServices = {
   createBikeIntoDB,
   getAllBikeFromDB,
   updateBikeIntoDB,
+  deleteBikeFromDB,
 };

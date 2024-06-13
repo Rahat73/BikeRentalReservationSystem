@@ -22,4 +22,6 @@ router.put(
   BikeControllers.updateBike,
 );
 
+router.delete('/:id', auth('admin'), BikeControllers.deleteBike);
+
 export const BikeRoutes = router;
