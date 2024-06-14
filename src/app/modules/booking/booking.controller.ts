@@ -35,14 +35,14 @@ const getMyBookings = catchAsync(async (req, res) => {
       message: 'No data found',
       data: result,
     });
+  } else {
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Rentals retrieved successfully',
+      data: result,
+    });
   }
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Rentals retrieved successfully',
-    data: result,
-  });
 });
 
 export const BookingControllers = {

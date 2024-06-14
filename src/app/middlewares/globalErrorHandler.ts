@@ -1,7 +1,6 @@
 import { ErrorRequestHandler } from 'express';
 import { TErrorMessages } from '../interface/error';
 import { ZodError } from 'zod';
-import { Error } from 'mongoose';
 import handleZodError from '../errors/handleZodError';
 import handleValidationError from '../errors/handleValidationError';
 import handleCastError from '../errors/handleCastError';
@@ -24,12 +23,12 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = formattedError?.statusCode;
     message = formattedError?.message;
     errorMessages = formattedError?.errorMessages;
-  } else if (err instanceof Error.ValidationError) {
+  } else if (err?.name === 'ValidationError') {
     const formattedError = handleValidationError(err);
     statusCode = formattedError?.statusCode;
     message = formattedError?.message;
     errorMessages = formattedError?.errorMessages;
-  } else if (err instanceof Error.CastError) {
+  } else if (err?.name === 'CastError') {
     const formattedError = handleCastError(err);
     statusCode = formattedError?.statusCode;
     message = formattedError?.message;

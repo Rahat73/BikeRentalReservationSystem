@@ -22,14 +22,14 @@ const getAllBikes = catchAsync(async (req, res) => {
       message: 'No data found',
       data: result,
     });
+  } else {
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Bikes retrieved successfully',
+      data: result,
+    });
   }
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Bikes retrieved successfully',
-    data: result,
-  });
 });
 
 const updateBike = catchAsync(async (req, res) => {
