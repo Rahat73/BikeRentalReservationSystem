@@ -5,7 +5,16 @@ export const createBookingValidationSchema = z.object({
     bikeId: z.string().min(1, 'Bike ID is required'),
     startTime: z
       .string({ required_error: 'Start time is required' })
-      .datetime(),
+      .datetime()
+      .refine(
+        (dateStr) => {
+          const startTime = new Date(dateStr);
+          return startTime < new Date();
+        },
+        {
+          message: 'Start time must be before the current time',
+        },
+      ),
   }),
 });
 
