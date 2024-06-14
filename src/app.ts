@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use('/api', router);
 
-app.get('/test', async (req: Request, res: Response) => {
+app.get('/', async (req: Request, res: Response) => {
   const test = 'Welcome to the Bike Rental Reservation System';
   res.send(test);
 });
