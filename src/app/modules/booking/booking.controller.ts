@@ -27,6 +27,16 @@ const returnBike = catchAsync(async (req, res) => {
 const getMyBookings = catchAsync(async (req, res) => {
   const { email } = req.user;
   const result = await BookingServices.getMyBookingsFromDB(email);
+
+  if (result.length === 0) {
+    sendResponse(res, {
+      statusCode: 404,
+      success: false,
+      message: 'No data found',
+      data: result,
+    });
+  }
+
   sendResponse(res, {
     statusCode: 200,
     success: true,

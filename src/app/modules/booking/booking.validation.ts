@@ -6,8 +6,6 @@ export const createBookingValidationSchema = z.object({
     startTime: z
       .string({ required_error: 'Start time is required' })
       .datetime(),
-
-    isReturned: z.boolean().optional().default(false),
   }),
 });
 

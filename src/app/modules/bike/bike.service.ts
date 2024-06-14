@@ -10,15 +10,13 @@ const createBikeIntoDB = async (payload: TBike) => {
 const getAllBikeFromDB = async () => {
   const result = await Bike.find();
 
-  if (result.length === 0) throw new AppError(404, 'No data found');
-
   return result;
 };
 
 const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
   //check if bike exists
   const bike = await Bike.findById(id);
-  if (!bike) throw new AppError(404, 'No data found');
+  if (!bike) throw new AppError(404, 'No bike found');
 
   const result = await Bike.findByIdAndUpdate(id, payload, {
     new: true,
@@ -29,7 +27,7 @@ const updateBikeIntoDB = async (id: string, payload: Partial<TBike>) => {
 const deleteBikeFromDB = async (id: string) => {
   //check if bike exists
   const bike = await Bike.findById(id);
-  if (!bike) throw new AppError(404, 'No data found');
+  if (!bike) throw new AppError(404, 'No bike found');
 
   const result = await Bike.findByIdAndDelete(id);
   return result;

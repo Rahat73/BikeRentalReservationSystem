@@ -12,7 +12,7 @@ const createBookingIntoDB = async (
 ) => {
   //check if bike is available
   const bike = await Bike.findById(payload.bikeId);
-  if (!bike) throw new AppError(404, 'Bike not found');
+  if (!bike) throw new AppError(404, 'No bike found');
   if (!bike.isAvailable) throw new AppError(400, 'Bike is not available');
 
   //fetch user id with email which is decoded from  access_token
@@ -53,7 +53,7 @@ const createBookingIntoDB = async (
 const returnBike = async (bookingId: string) => {
   //check if booking exists
   const booking = await Booking.findById(bookingId);
-  if (!booking) throw new AppError(404, 'No data found');
+  if (!booking) throw new AppError(404, 'No booking found');
 
   //fetch bike information
   const bike = await Bike.findById(booking.bikeId);
@@ -107,8 +107,6 @@ const getMyBookingsFromDB = async (email: string) => {
   const user = await User.findOne({ email });
 
   const bookings = await Booking.find({ userId: user?._id });
-
-  if (bookings.length === 0) throw new AppError(404, 'No data found');
 
   return bookings;
 };

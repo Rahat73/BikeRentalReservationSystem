@@ -12,5 +12,5 @@ export const rentalCost = (
 ) => {
   const rentalDuration = calculateRentalDuration(startTime, returnTimeTime);
 
-  return rentalDuration * pricePerHour;
+  return Number((rentalDuration * pricePerHour).toFixed(2));
 };

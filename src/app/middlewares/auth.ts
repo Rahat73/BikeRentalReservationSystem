@@ -29,7 +29,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     // checking if the user is exist
     const user = await User.isUserExistsByEmail(email);
     if (!user) {
-      throw new AppError(404, 'This user is not found !');
+      throw new AppError(404, 'You have no access to this route');
     }
 
     if (requiredRoles.length && !requiredRoles.includes(role)) {
