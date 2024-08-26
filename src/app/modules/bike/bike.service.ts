@@ -1,4 +1,6 @@
+import QueryBuilder from '../../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
+import { bikeSearchableFields } from './bike.constant';
 import { TBike } from './bike.interface';
 import { Bike } from './bike.model';
 
@@ -7,8 +9,15 @@ const createBikeIntoDB = async (payload: TBike) => {
   return result;
 };
 
-const getAllBikeFromDB = async () => {
-  const result = await Bike.find();
+const getAllBikeFromDB = async (query: Record<string, unknown>) => {
+  const bikeQuery = new QueryBuilder(Bike.find(), query)
+    .search(bikeSearchableFields)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await bikeQuery.modelQuery;
 
   return result;
 };

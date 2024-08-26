@@ -46,9 +46,9 @@ const loginUser = async (payload: TLoginUser) => {
 
   //remove unwanted fields from
   const userObject = (user as IUserDocument).toObject();
-  delete userObject.createdAt;
-  delete userObject.updatedAt;
-  delete userObject.__v;
+  // delete userObject.createdAt;
+  // delete userObject.updatedAt;
+  // delete userObject.__v;
 
   return { user: userObject, access_token };
 };
