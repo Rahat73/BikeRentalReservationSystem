@@ -15,21 +15,12 @@ const createBike = catchAsync(async (req, res) => {
 const getAllBikes = catchAsync(async (req, res) => {
   const result = await BikeServices.getAllBikeFromDB(req.query);
 
-  if (result.length === 0) {
-    sendResponse(res, {
-      statusCode: 404,
-      success: false,
-      message: 'No data found',
-      data: result,
-    });
-  } else {
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: 'Bikes retrieved successfully',
-      data: result,
-    });
-  }
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Bikes retrieved successfully',
+    data: result,
+  });
 });
 
 const getBikeById = catchAsync(async (req, res) => {
