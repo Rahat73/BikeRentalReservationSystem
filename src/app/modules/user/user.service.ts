@@ -26,8 +26,24 @@ const updateProfileIntoDB = async (email: string, payload: Partial<TUser>) => {
   return result;
 };
 
+const makeAdmin = async (userId: string) => {
+  const result = await User.findByIdAndUpdate(
+    userId,
+    { role: 'admin' },
+    { new: true },
+  );
+  return result;
+};
+
+const deleteUserFromDB = async (userId: string) => {
+  const result = await User.findByIdAndDelete(userId);
+  return result;
+};
+
 export const UserServices = {
   getAllUsersFromDB,
   getProfileFromDB,
   updateProfileIntoDB,
+  makeAdmin,
+  deleteUserFromDB,
 };

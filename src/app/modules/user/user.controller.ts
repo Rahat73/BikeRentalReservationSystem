@@ -1,6 +1,5 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { User } from './user.model';
 import { UserServices } from './user.service';
 
 const getAllUsers = catchAsync(async (req, res) => {
@@ -37,8 +36,34 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 });
 
+const makeAdmin = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await UserServices.makeAdmin(userId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Promoted to admin successfully',
+    data: result,
+  });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await UserServices.deleteUserFromDB(userId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User deleted successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getAllUsers,
   getProfile,
   updateProfile,
+  makeAdmin,
+  deleteUser,
 };

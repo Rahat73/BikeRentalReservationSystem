@@ -17,4 +17,8 @@ router.put(
   UserControllers.updateProfile,
 );
 
+router.put('/:userId', auth('admin'), UserControllers.makeAdmin);
+
+router.delete('/:userId', auth('admin'), UserControllers.deleteUser);
+
 export const UserRoutes = router;
