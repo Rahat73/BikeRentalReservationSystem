@@ -30,7 +30,7 @@ const payment = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Payment completed successfully',
+    message: 'Proceed to payment',
     data: result,
   });
 });
