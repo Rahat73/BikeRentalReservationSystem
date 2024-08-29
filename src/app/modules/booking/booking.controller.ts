@@ -24,29 +24,32 @@ const returnBike = catchAsync(async (req, res) => {
   });
 });
 
+const payment = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BookingServices.payment(id);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Bike returned successfully',
+    data: result,
+  });
+});
+
 const getMyBookings = catchAsync(async (req, res) => {
   const { email } = req.user;
   const result = await BookingServices.getMyBookingsFromDB(email);
 
-  if (result.length === 0) {
-    sendResponse(res, {
-      statusCode: 404,
-      success: false,
-      message: 'No data found',
-      data: result,
-    });
-  } else {
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: 'Rentals retrieved successfully',
-      data: result,
-    });
-  }
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
 });
 
 export const BookingControllers = {
   createBooking,
   returnBike,
+  payment,
   getMyBookings,
 };

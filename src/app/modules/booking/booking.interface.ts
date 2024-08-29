@@ -7,4 +7,5 @@ export type TBooking = {
   returnTime?: Date;
   totalCost: number;
   isReturned?: boolean;
+  isPaid?: boolean;
 };

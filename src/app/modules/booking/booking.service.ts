@@ -35,6 +35,7 @@ const createBookingIntoDB = async (
       payload.bikeId,
       {
         isAvailable: false,
+        isPaid: false,
       },
       { session },
     );
@@ -103,6 +104,24 @@ const returnBike = async (bookingId: string) => {
   }
 };
 
+const payment = async (bookingId: string) => {
+  //check if booking exists
+  const booking = await Booking.findById(bookingId);
+  if (!booking) throw new AppError(404, 'No booking found');
+
+  const result = await Booking.findByIdAndUpdate(
+    bookingId,
+    {
+      isPaid: true,
+    },
+    {
+      new: true,
+    },
+  );
+
+  return result;
+};
+
 const getMyBookingsFromDB = async (email: string) => {
   const user = await User.findOne({ email });
 
@@ -114,5 +133,6 @@ const getMyBookingsFromDB = async (email: string) => {
 export const BookingServices = {
   createBookingIntoDB,
   returnBike,
+  payment,
   getMyBookingsFromDB,
 };
