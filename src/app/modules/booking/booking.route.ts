@@ -13,10 +13,17 @@ router.post(
   BookingControllers.createBooking,
 );
 
-router.put('/:id/return', auth('admin'), BookingControllers.returnBike);
+router.put(
+  '/:id/return',
+  auth('admin'),
+  validateRequest(BookingValidations.returnBikeValidationSchema),
+  BookingControllers.returnBike,
+);
 
 router.put('/:id/payment', auth('admin'), BookingControllers.payment);
 
-router.get('/', auth('admin', 'user'), BookingControllers.getMyBookings);
+router.get('/me', auth('admin', 'user'), BookingControllers.getMyBookings);
+
+router.get('/', auth('admin'), BookingControllers.getAllBookings);
 
 export const BookingRoutes = router;

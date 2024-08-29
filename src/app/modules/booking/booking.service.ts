@@ -5,6 +5,7 @@ import { Booking } from './booking.model';
 import { Bike } from '../bike/bike.model';
 import AppError from '../../errors/AppError';
 import { rentalCost } from './booking.utility';
+import QueryBuilder from '../../../builder/QueryBuilder';
 
 const createBookingIntoDB = async (
   email: string,
@@ -51,15 +52,24 @@ const createBookingIntoDB = async (
   }
 };
 
-const returnBike = async (bookingId: string) => {
+const returnBike = async (
+  bookingId: string,
+  payload: Pick<TBooking, 'returnTime'>,
+) => {
   //check if booking exists
   const booking = await Booking.findById(bookingId);
   if (!booking) throw new AppError(404, 'No booking found');
 
+  const returnTime = payload.returnTime || new Date();
+
+  const timeStart = new Date(booking.startTime);
+  const timeEnd = new Date(returnTime);
+
+  if (returnTime && timeStart > timeEnd)
+    throw new AppError(400, 'Return time must be after start time');
+
   //fetch bike information
   const bike = await Bike.findById(booking.bikeId);
-
-  const returnTime = new Date();
 
   const totalCost: number = rentalCost(
     bike?.pricePerHour as number,
@@ -125,9 +135,24 @@ const payment = async (bookingId: string) => {
 const getMyBookingsFromDB = async (email: string) => {
   const user = await User.findOne({ email });
 
-  const bookings = await Booking.find({ userId: user?._id });
+  const bookings = await Booking.find({ userId: user?._id }).populate('bikeId');
 
   return bookings;
+};
+
+const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
+  const bookingQuery = new QueryBuilder(
+    Booking.find().populate('userId').populate('bikeId'),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await bookingQuery.modelQuery;
+
+  return result;
 };
 
 export const BookingServices = {
@@ -135,4 +160,5 @@ export const BookingServices = {
   returnBike,
   payment,
   getMyBookingsFromDB,
+  getAllBookingsFromDB,
 };

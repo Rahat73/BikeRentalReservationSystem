@@ -44,6 +44,8 @@ const deleteBikeFromDB = async (id: string) => {
   const bike = await Bike.findById(id);
   if (!bike) throw new AppError(404, 'No bike found');
 
+  if (!bike.isAvailable) throw new AppError(400, 'Bike is not available');
+
   const result = await Bike.findByIdAndDelete(id);
   return result;
 };

@@ -1,4 +1,5 @@
 import QueryBuilder from '../../../builder/QueryBuilder';
+import AppError from '../../errors/AppError';
 import { userSearchableFields } from './user.constants';
 import { TUser } from './user.interface';
 import { User } from './user.model';
@@ -36,6 +37,11 @@ const makeAdmin = async (userId: string) => {
 };
 
 const deleteUserFromDB = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (user?.role === 'admin') {
+    throw new AppError(400, 'Admins can not be deleted');
+  }
+
   const result = await User.findByIdAndDelete(userId);
   return result;
 };
