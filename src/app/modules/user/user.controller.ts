@@ -3,6 +3,17 @@ import sendResponse from '../../utils/sendResponse';
 import { User } from './user.model';
 import { UserServices } from './user.service';
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.getAllUsersFromDB(req.query);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'User profile retrieved successfully',
+    data: result,
+  });
+});
+
 const getProfile = catchAsync(async (req, res) => {
   const { email } = req.user;
   const result = await UserServices.getProfileFromDB(email);
@@ -27,6 +38,7 @@ const updateProfile = catchAsync(async (req, res) => {
 });
 
 export const UserControllers = {
+  getAllUsers,
   getProfile,
   updateProfile,
 };

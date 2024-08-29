@@ -6,6 +6,8 @@ import { UserValidation } from './user.validation';
 
 const router = Router();
 
+router.get('/', auth('admin'), UserControllers.getAllUsers);
+
 router.get('/me', auth('admin', 'user'), UserControllers.getProfile);
 
 router.put(
