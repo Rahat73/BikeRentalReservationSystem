@@ -6,6 +6,7 @@ import { Bike } from '../bike/bike.model';
 import AppError from '../../errors/AppError';
 import { rentalCost } from './booking.utility';
 import QueryBuilder from '../../../builder/QueryBuilder';
+import { initiatePayment } from '../payment/payment.utils';
 
 const createBookingIntoDB = async (
   email: string,
@@ -73,8 +74,8 @@ const returnBike = async (
 
   const totalCost: number = rentalCost(
     bike?.pricePerHour as number,
-    booking.startTime as Date,
-    returnTime as Date,
+    timeStart as Date,
+    timeEnd as Date,
   );
 
   const session = await startSession();
@@ -119,17 +120,42 @@ const payment = async (bookingId: string) => {
   const booking = await Booking.findById(bookingId);
   if (!booking) throw new AppError(404, 'No booking found');
 
-  const result = await Booking.findByIdAndUpdate(
-    bookingId,
-    {
-      isPaid: true,
-    },
-    {
-      new: true,
-    },
-  );
+  const user = await User.findById(booking.userId);
+  if (!user) throw new AppError(404, 'No user found');
 
-  return result;
+  if (!booking.isReturned) throw new AppError(400, 'Bike is not returned yet');
+
+  // const paymentData = {
+  //   tran_id: bookingId,
+  //   amount: booking.totalCost,
+  //   cus_name: (booking.userId as unknown as { name: string }).name,
+  //   cus_email: (booking.userId as unknown as { email: string }).email,
+  //   cus_add1: (booking.userId as unknown as { address: string }).address,
+  //   cus_phone: (booking.userId as unknown as { phone: string }).phone,
+  // };
+
+  const paymentData = {
+    tran_id: bookingId,
+    amount: booking.totalCost.toFixed(2),
+    cus_name: user.name,
+    cus_email: user.email,
+    cus_add1: user.address,
+    cus_phone: user.phone,
+  };
+
+  const paymentSession = await initiatePayment(paymentData);
+
+  // const result = await Booking.findByIdAndUpdate(
+  //   bookingId,
+  //   {
+  //     isPaid: true,
+  //   },
+  //   {
+  //     new: true,
+  //   },
+  // );
+
+  return { payment_url: paymentSession.payment_url };
 };
 
 const getMyBookingsFromDB = async (email: string) => {

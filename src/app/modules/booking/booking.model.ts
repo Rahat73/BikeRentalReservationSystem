@@ -8,6 +8,7 @@ const bookingSchema = new Schema<TBooking>({
   returnTime: { type: Date, default: null },
   totalCost: { type: Number, default: 0 },
   isReturned: { type: Boolean, default: false },
+  isPaid: { type: Boolean, default: false },
 });
 
 export const Booking = model<TBooking>('Booking', bookingSchema);
