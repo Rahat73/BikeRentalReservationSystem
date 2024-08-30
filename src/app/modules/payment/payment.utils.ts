@@ -2,27 +2,30 @@ import axios from 'axios';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 
-export const initiatePayment = async ({
-  tran_id,
-  amount,
-  cus_name,
-  cus_email,
-  cus_add1,
-  cus_phone,
-}: {
-  tran_id: string;
-  amount: string;
-  cus_name: string;
-  cus_email: string;
-  cus_add1: string;
-  cus_phone: string;
-}) => {
+export const initiatePayment = async (
+  {
+    tran_id,
+    amount,
+    cus_name,
+    cus_email,
+    cus_add1,
+    cus_phone,
+  }: {
+    tran_id: string;
+    amount: string;
+    cus_name: string;
+    cus_email: string;
+    cus_add1: string;
+    cus_phone: string;
+  },
+  paymentType: string,
+) => {
   try {
     const response = await axios.post(config.payment_url!, {
       store_id: config.store_id,
       tran_id,
-      success_url: `http://localhost:5000/api/payment/confirmation?trxId=${tran_id}&status=success`,
-      fail_url: `http://localhost:5000/api/payment/confirmation?status=failed`,
+      success_url: `http://localhost:5000/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=successful`,
+      fail_url: `http://localhost:5000/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=failed`,
       cancel_url: 'http://localhost:5173/',
       amount,
       currency: 'BDT',
@@ -48,7 +51,7 @@ export const initiatePayment = async ({
 
 export const verifyPayment = async (trxId: string) => {
   try {
-    const response = await axios.get(config.payment_url!, {
+    const response = await axios.get(config.payment_verification_url!, {
       params: {
         store_id: config.store_id,
         signature_key: config.signature_key,

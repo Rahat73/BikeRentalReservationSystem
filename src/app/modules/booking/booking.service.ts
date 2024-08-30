@@ -19,8 +19,12 @@ const createBookingIntoDB = async (
 
   //fetch user id with email which is decoded from  access_token
   const user = await User.findOne({ email });
+  if (!user) throw new AppError(404, 'No user found');
+
+  const trxId = `trx_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
 
   const bookingInfo: Partial<TBooking> = {
+    trxId: trxId,
     userId: user?._id as Types.ObjectId,
     bikeId: payload.bikeId,
     startTime: payload.startTime,
@@ -30,22 +34,35 @@ const createBookingIntoDB = async (
 
   try {
     session.startTransaction();
-    const result = await Booking.create([bookingInfo], { session });
+
+    await Booking.create([bookingInfo], { session });
 
     //update bike isAvailable status
-    await Bike.findByIdAndUpdate(
-      payload.bikeId,
-      {
-        isAvailable: false,
-        isPaid: false,
-      },
-      { session },
-    );
+    // await Bike.findByIdAndUpdate(
+    //   payload.bikeId,
+    //   {
+    //     isAvailable: false,
+    //     isPaid: false,
+    //   },
+    //   { session },
+    // );
+
+    const paymentData = {
+      tran_id: trxId,
+      amount: '100',
+      cus_name: user.name,
+      cus_email: user.email,
+      cus_add1: user.address,
+      cus_phone: user.phone,
+    };
+
+    const paymentSession = await initiatePayment(paymentData, 'booking');
 
     await session.commitTransaction();
     await session.endSession();
+    return { payment_url: paymentSession.payment_url };
 
-    return result[0];
+    // return result
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
@@ -143,7 +160,7 @@ const payment = async (bookingId: string) => {
     cus_phone: user.phone,
   };
 
-  const paymentSession = await initiatePayment(paymentData);
+  const paymentSession = await initiatePayment(paymentData, 'final-payment');
 
   // const result = await Booking.findByIdAndUpdate(
   //   bookingId,

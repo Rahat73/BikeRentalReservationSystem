@@ -9,7 +9,8 @@ const bookingSchema = new Schema<TBooking>({
   totalCost: { type: Number, default: 0 },
   isReturned: { type: Boolean, default: false },
   isPaid: { type: Boolean, default: false },
-  trxid: { type: String },
+  isBooked: { type: Boolean, default: false },
+  trxId: { type: String },
 });
 
 export const Booking = model<TBooking>('Booking', bookingSchema);
