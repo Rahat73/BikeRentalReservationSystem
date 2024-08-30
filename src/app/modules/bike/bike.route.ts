@@ -13,9 +13,9 @@ router.post(
   BikeControllers.createBike,
 );
 
-router.get('/', auth(), BikeControllers.getAllBikes);
+router.get('/', BikeControllers.getAllBikes);
 
-router.get('/:bikeId', auth(), BikeControllers.getBikeById);
+router.get('/:bikeId', BikeControllers.getBikeById);
 
 router.put(
   '/:id',
