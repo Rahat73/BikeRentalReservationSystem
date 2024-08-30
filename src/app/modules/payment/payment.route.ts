@@ -10,6 +10,4 @@ router.post(
   PaymentControllers.paymentConfirmation,
 );
 
-// router.get('/', auth('admin'), BookingControllers.getAllBookings);
-
 export const PaymentRoutes = router;
