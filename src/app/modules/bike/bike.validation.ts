@@ -12,6 +12,7 @@ const createBikeValidationSchema = z.object({
     year: z.number().int().positive('Year must be a positive integer'),
     model: z.string().min(1, 'Model is required'),
     brand: z.string().min(1, 'Brand is required'),
+    img_url: z.string().optional(),
   }),
 });
 
@@ -32,6 +33,7 @@ const updateBikeValidationSchema = z.object({
       .optional(),
     model: z.string().optional(),
     brand: z.string().optional(),
+    img_url: z.string().optional(),
   }),
 });
 

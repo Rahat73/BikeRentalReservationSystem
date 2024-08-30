@@ -8,7 +8,7 @@ const createBooking = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Rental created successfully',
+    message: 'Proceed to payment',
     data: result,
   });
 });

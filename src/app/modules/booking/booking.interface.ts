@@ -8,4 +8,5 @@ export type TBooking = {
   totalCost: number;
   isReturned?: boolean;
   isPaid?: boolean;
+  trxid: string;
 };
