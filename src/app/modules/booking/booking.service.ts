@@ -7,6 +7,8 @@ import AppError from '../../errors/AppError';
 import { rentalCost } from './booking.utility';
 import QueryBuilder from '../../../builder/QueryBuilder';
 import { initiatePayment } from '../payment/payment.utils';
+import { TCoupon } from '../coupon/coupon.interface';
+import { Coupon } from '../coupon/coupon.model';
 
 const createBookingIntoDB = async (
   email: string,
@@ -198,10 +200,41 @@ const getAllBookingsFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const applyCouponIntoDB = async (bookingId: string, payload: TCoupon) => {
+  //check if booking exists
+  const booking = await Booking.findById(bookingId);
+  if (!booking) throw new AppError(404, 'No booking found');
+
+  //check if coupon is already applied
+  if (booking.isCouponApplied)
+    throw new AppError(400, 'Coupon is already applied');
+
+  //check if coupon is valid
+  const coupon = await Coupon.findOne({ couponCode: payload.couponCode });
+  if (!coupon) throw new AppError(404, 'Invalid coupon code');
+
+  const newTotalCost =
+    booking.totalCost - booking.totalCost * (coupon.discountPercent / 100);
+
+  const result = await Booking.findByIdAndUpdate(
+    bookingId,
+    {
+      isCouponApplied: true,
+      totalCost: newTotalCost,
+    },
+    {
+      new: true,
+    },
+  );
+
+  return result;
+};
+
 export const BookingServices = {
   createBookingIntoDB,
   returnBike,
   payment,
   getMyBookingsFromDB,
   getAllBookingsFromDB,
+  applyCouponIntoDB,
 };

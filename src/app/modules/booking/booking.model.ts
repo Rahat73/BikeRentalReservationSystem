@@ -11,6 +11,7 @@ const bookingSchema = new Schema<TBooking>({
   isPaid: { type: Boolean, default: false },
   isBooked: { type: Boolean, default: false },
   trxId: { type: String },
+  isCouponApplied: { type: Boolean, default: false },
 });
 
 export const Booking = model<TBooking>('Booking', bookingSchema);

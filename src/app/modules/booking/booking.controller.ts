@@ -58,10 +58,22 @@ const getAllBookings = catchAsync(async (req, res) => {
   });
 });
 
+const applyCoupon = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BookingServices.applyCouponIntoDB(id, req.body);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Coupon applied successfully',
+    data: result,
+  });
+});
+
 export const BookingControllers = {
   createBooking,
   returnBike,
   payment,
   getMyBookings,
   getAllBookings,
+  applyCoupon,
 };

@@ -20,10 +20,16 @@ router.put(
   BookingControllers.returnBike,
 );
 
-router.put('/:id/payment', auth('admin'), BookingControllers.payment);
+router.put('/:id/payment', auth('admin', 'user'), BookingControllers.payment);
 
 router.get('/me', auth('admin', 'user'), BookingControllers.getMyBookings);
 
 router.get('/', auth('admin'), BookingControllers.getAllBookings);
+
+router.put(
+  '/:id/coupon',
+  auth('admin', 'user'),
+  BookingControllers.applyCoupon,
+);
 
 export const BookingRoutes = router;

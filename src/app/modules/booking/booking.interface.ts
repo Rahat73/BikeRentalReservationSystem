@@ -10,4 +10,5 @@ export type TBooking = {
   isPaid?: boolean;
   isBooked?: boolean;
   trxId: string;
+  isCouponApplied?: boolean;
 };
