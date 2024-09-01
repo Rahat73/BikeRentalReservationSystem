@@ -48,7 +48,7 @@ const bookingConfirmation = async (trxId: string, status: string) => {
     }
   }
 
-  const filePath = join(__dirname, '../../../views/confirmation.html');
+  const filePath = join(__dirname, '../../../../public/confirmation.html');
   let template = readFileSync(filePath, 'utf-8');
 
   template = template.replace('{{message}}', `Booking ${status}`);
@@ -67,7 +67,7 @@ const paymentConfirmation = async (trxId: string, status: string) => {
     });
   }
 
-  const filePath = join(__dirname, '../../../views/confirmation.html');
+  const filePath = join(__dirname, '../../../../public/confirmation.html');
   let template = readFileSync(filePath, 'utf-8');
 
   template = template.replace('{{message}}', `Payment ${status}`);

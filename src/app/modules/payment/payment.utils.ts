@@ -24,8 +24,8 @@ export const initiatePayment = async (
     const response = await axios.post(config.payment_url!, {
       store_id: config.store_id,
       tran_id,
-      success_url: `http://localhost:5000/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=successful`,
-      fail_url: `http://localhost:5000/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=failed`,
+      success_url: `https://bike-rental-reservation-system-backend-seven.vercel.app/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=successful`,
+      fail_url: `https://bike-rental-reservation-system-backend-seven.vercel.app/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=failed`,
       cancel_url: 'http://localhost:5173/',
       amount,
       currency: 'BDT',
