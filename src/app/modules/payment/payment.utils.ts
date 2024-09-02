@@ -26,7 +26,7 @@ export const initiatePayment = async (
       tran_id,
       success_url: `https://bike-rental-reservation-system-backend-seven.vercel.app/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=successful`,
       fail_url: `https://bike-rental-reservation-system-backend-seven.vercel.app/api/payment/confirmation/${paymentType}?trxId=${tran_id}&status=failed`,
-      cancel_url: 'http://localhost:5173/',
+      cancel_url: 'https://rent-a-bike.vercel.app',
       amount,
       currency: 'BDT',
       signature_key: config.signature_key,
